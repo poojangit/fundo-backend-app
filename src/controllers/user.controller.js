@@ -1,4 +1,4 @@
-import HttpStatus from 'http-status-codes'
+
 import * as UserService from '../services/user.services'
 
 /**
@@ -10,9 +10,9 @@ import * as UserService from '../services/user.services'
 
 export const newUser = async(req, res, next) => {
     const data = await UserService.newUser(req.body)
-    res.status(HttpStatus.OK).json({
-        code: HttpStatus.CREATED,
-        data : data,
-        message: 'User Registered Successfully!'
+    res.status(data.code).json({
+        code: data.code,
+        data : data.data,
+        message: data.message
     })
 }
