@@ -16,3 +16,12 @@ export const newUser = async(req, res, next) => {
         message: data.message
     })
 }
+
+export const userLogin = async(req, res) => {
+    const data = await UserService.userLogin(req.body)
+    res.status(data.code).json({
+        code : data.code ,
+        data : data.data,
+        message : data .message
+    })
+}
