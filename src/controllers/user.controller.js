@@ -18,6 +18,7 @@ export const newUser = async(req, res, next) => {
 }
 
 export const userLogin = async(req, res) => {
+    //error handle
     const data = await UserService.userLogin(req.body)
     res.status(data.code).json({
         code : data.code ,

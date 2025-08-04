@@ -1,7 +1,7 @@
 import HttpStatus from 'http-status-codes'
 import bcrypt from 'bcrypt'
 import User from '../models/user.model'
-
+import jwt from 'jsonwebtoken'
 const saltRounds = 10
 //Create new User
 export const newUser = async(body) => {
@@ -46,7 +46,7 @@ export const userLogin = async({email, password}) => {
                 email : email
         })
         console.log("User email ", checkUser);
-        if(checkUser == null){
+        if(!checkUser){
             return {
                 code : HttpStatus.NOT_FOUND,
                 data : [],
@@ -54,8 +54,7 @@ export const userLogin = async({email, password}) => {
             }
         }
 
-        // Campare password
-
+        // Compare password
         const isMatch = await bcrypt.compare(password, checkUser.password)
         if(!isMatch) {
             return {
@@ -64,16 +63,17 @@ export const userLogin = async({email, password}) => {
                 message : "Invalid Credentials"
             }
         }
+        const token = jwt.sign({ email: checkUser.email, id : checkUser._id }, process.env.ACCESS_TOKEN_KEY);
 
-        // return sucess
-
+        // return success
         return {
             code : HttpStatus.OK,
             data : {
                 id : checkUser._id,
-                email: checkUser.email
+                email: checkUser.email,
+                token : token
             },
-            message : "Login successful"
+            message : "Login successful and token generated"
         }
     }
     //login error catch
