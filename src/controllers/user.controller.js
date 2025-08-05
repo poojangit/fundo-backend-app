@@ -1,5 +1,4 @@
-
-import * as UserService from '../services/user.services'
+import * as UserService from '../services/user.services';
 
 /**
  * Controller to get all users available
@@ -8,21 +7,29 @@ import * as UserService from '../services/user.services'
  * @param {Function} next
  */
 
-export const newUser = async(req, res, next) => {
-    const data = await UserService.newUser(req.body)
+export const newUser = async (req, res, next) => {
+  try {
+    const data = await UserService.newUser(req.body);
     res.status(data.code).json({
-        code: data.code,
-        data : data.data,
-        message: data.message
-    })
-}
+      code: data.code,
+      data: data.data,
+      message: data.message
+    });
+  } catch (error) {
+    console.log('Error occured while created a user: ' + error);
+  }
+};
 
-export const userLogin = async(req, res) => {
-    //error handle
-    const data = await UserService.userLogin(req.body)
+export const userLogin = async (req, res) => {
+  //error handle
+  try {
+    const data = await UserService.userLogin(req.body);
     res.status(data.code).json({
-        code : data.code ,
-        data : data.data,
-        message : data .message
-    })
-}
+      code: data.code,
+      data: data.data,
+      message: data.message
+    });
+  } catch (error) {
+    console.log('Error occured while login: ' + error);
+  }
+};
