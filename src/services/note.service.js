@@ -76,3 +76,33 @@ export const updateNote = async (id, noteBody)=> {
         }
     }
 }
+
+//get note by id
+
+export const getNoteById = async(id) => {
+    try {
+        const note = await Note.findById(id)
+        if(!note) {
+            return {
+                code : HttpStatus.NOT_FOUND,
+                data : [],
+                messsage : "Note not found"
+            }
+        }
+        return {
+            code : HttpStatus.OK,
+            data : note,
+            message : "Note fetched successfully!"
+        }
+    }
+    catch (error) {
+        console.log("Error while fetching the details : " + error);
+        return {
+            code : HttpStatus.INTERNAL_SERVER_ERROR,
+            data : [],
+            message : "Error fetching note"
+        }
+    }
+}
+
+//Delete note by id
