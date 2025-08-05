@@ -130,3 +130,122 @@ export const deleteNoteById = async(id) => {
         }
     }
 }
+
+//Change Color
+
+export const changeColor = async( id, color, userId) => {
+    console.log(userId);
+    
+    try {
+        if(!color || !id){
+            return {
+                code : HttpStatus.BAD_REQUEST,
+                data : [],
+                message : "Please provide valid color and id"
+            }
+        }
+    
+        const note = await Note.findOneAndUpdate(
+            { _id: id, createdBy: userId },
+            {color : color},
+            {new : true} //Returns the updated note
+        )
+        if(!note){
+            return {
+                code : HttpStatus.NOT_FOUND,
+                data : [],
+                message : "Note not found or you don't have permission"
+            }
+        }
+        return {
+            code : HttpStatus.OK,
+            data : note ,
+            message : "Color changed successfully!!"
+        }
+    } catch (error) {
+        console.log("Error while changing the color : " + error.message);
+        return {
+            code : HttpStatus.INTERNAL_SERVER_ERROR,
+            data : [],
+            message : "Unable to change the color"
+        }
+    }
+}
+
+//Archive note
+
+export const archiveNote = async(id, isArchive, userId) => {
+    console.log(isArchive);
+    try {
+        if(!id){
+            return {
+                code : HttpStatus.BAD_REQUEST,
+                data : [],
+                message : "Please provide a valid note ID"
+            }
+        }
+        const note = await Note.findOneAndUpdate(
+            {_id : id, createdBy : userId},
+            {isArchive : isArchive},
+            {new : true}
+        )
+        if(!note){
+            return {
+                code : HttpStatus.NOT_FOUND,
+                data : [],
+                message : "Note not found or you don't have permission"
+            }
+        }
+        return {
+            code : HttpStatus.OK,
+            data : note,
+            message : "Note Archived successfully"
+        }
+    } catch(error){
+        console.error("Error updating isArchive: ", error.message)
+        return {
+            code : HttpStatus.INTERNAL_SERVER_ERROR,
+            data : [],
+            message : "Unable to update isArchive"
+        }
+    }
+}
+
+//Trash note
+
+export const trashNote = async(id, isTrash, userId) => {
+    console.log(isTrash);
+    try {
+        if(!id) {
+            return {
+                code : HttpStatus.BAD_REQUEST,
+                data : [],
+                message : "Please provide a valid Note Id"
+            }
+        }
+        const note = await Note.findOneAndUpdate(
+            {_id : id, createdBy: userId},
+            {isTrash : isTrash},
+            {new : true}
+        )
+        if(!note) {
+            return {
+                code : HttpStatus.NOT_FOUND,
+                data : [],
+                message : "Note not found or yu=ou don't have permission"
+            }
+        }
+        return {
+            code : HttpStatus.OK,
+            data : note,
+            message : "Note added to trash successfully"
+        }
+    } catch(error){
+        console.error("Error updating isTrash: " , error.message)
+        return {
+            code : HttpStatus.INTERNAL_SERVER_ERROR,
+            data : [],
+            message : "Unable to update isTrash"
+        }
+    }
+}

@@ -67,3 +67,54 @@ export const deleteNoteById = async (req, res) => {
         console.log(error)
     }
 }
+
+export const changeColor = async(req, res) => {
+    try {
+    const id = req.params.id
+    const {color} = req.body
+    const userId = req.body.createdBy
+    const result = await noteService.changeColor(id, color, userId)
+    res.status(result.code).json({
+            code : result.code,
+            data : result.data,
+            message : result.message
+        })
+    }
+    catch(error) {
+        console.log("Error occured : " + error);
+    }
+}
+
+export const archiveNote = async(req, res) => {
+    try {
+        const id = req.params.id
+        const {isArchive} = req.body
+        const userId = req.body.createdBy
+        const result = await noteService.archiveNote(id, isArchive, userId)
+        res.status(result.code).json({
+            code : result.code,
+            data : result.data,
+            message : result.message
+        })
+    } catch(error) {
+        console.error("Error in Archive controller: " , error);  
+    }
+}
+
+export const trashNote = async(req, res) => {
+  try {
+  const id = req.params.id
+  const { isTrash } = req.body
+  const userId = req.body.createdBy
+  const result = await noteService.trashNote(id, isTrash, userId)
+  res.status(result.code).json({
+    code : result.code,
+    data : result.data,
+    message : result.message
+  })
+} catch(error){
+  console.log("Error in trash note controller : " + error);
+  
+}
+}
+
