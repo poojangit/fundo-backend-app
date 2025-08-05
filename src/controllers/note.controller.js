@@ -53,3 +53,17 @@ export const getNoteById = async (req, res) => {
     console.log(error);
   }
 };
+
+export const deleteNoteById = async (req, res) => {
+    try {
+        const id = req.params.id
+        const result = await noteService.deleteNoteById(id)
+        res.status(result.code).json({
+            code : result.code,
+            data : result.data,
+            message : result.message
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}

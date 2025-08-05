@@ -17,7 +17,7 @@ export const createNote = async (noteBody) => {
         return {
             code : HttpStatus.INTERNAL_SERVER_ERROR,
             data : [],
-            message : 'Error creating node'
+            message : 'Error creating note'
         }
     }
 }
@@ -106,3 +106,27 @@ export const getNoteById = async(id) => {
 }
 
 //Delete note by id
+export const deleteNoteById = async(id) => {
+    try {
+        const note = await Note.findByIdAndDelete(id)
+        if(!note) {
+            return {
+                code : HttpStatus.NOT_FOUND,
+                data : [],
+                message : "Note not found!"
+            }
+        }
+        return {
+            code : HttpStatus.OK,
+            data : note,
+            message : "Note Deleted Successfully!!"
+        }
+    } catch(error) {
+        console.log("Error while deleting a note" + error);
+        return {
+            code : HttpStatus.BAD_REQUEST,
+            data : [],
+            message : "Error deleting note"
+        }
+    }
+}
