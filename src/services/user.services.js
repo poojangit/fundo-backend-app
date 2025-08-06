@@ -2,6 +2,7 @@ import HttpStatus from 'http-status-codes'
 import bcrypt from 'bcrypt'
 import User from '../models/user.model'
 import jwt from 'jsonwebtoken'
+import { sendMail } from '../utils/mailer.util'
 const saltRounds = 10
 //Create new User
 export const newUser = async(body) => {
@@ -83,6 +84,55 @@ export const userLogin = async({email, password}) => {
             code : HttpStatus.INTERNAL_SERVER_ERROR,
             data : [],
             message : "Error occured during login"
+        }
+    }
+}
+
+export const forgotPass = async({email}) => {
+    try {
+        const checkUser = await User.findOne({email})
+        if(!checkUser) {
+            return {
+                code : HttpStatus.NOT_FOUND,
+                data : [],
+                message : "No user found"
+            }
+        }
+        //Generate a token
+        const token = jwt.sign(
+            {id: checkUser._id, email: checkUser.email},
+            process.env.ACCESS_TOKEN_KEY,
+            {expiresIn : '15m'}
+        )
+        console.log("Generated Reset Token: ", token);
+
+        //TODO: here ----> Send token via email to the user using nodemailer
+
+        //send token via mail
+        const emailSent = await sendMail(
+            email,
+            "Password Reset Request",
+            `Here is your password  reset token: ${token}`
+        )
+        if(!emailSent) {
+            return {
+                code : HttpStatus.INTERNAL_SERVER_ERROR,
+                data : [],
+                message : "Failed to send reset email"
+            }
+        }
+
+        return {
+            code : HttpStatus.OK,
+            data : {token},
+            message : "Password reser token generated successfully!!"
+        }
+    } catch(error) {
+        console.error("Error in forgot password: ", error);
+        return {
+            code : HttpStatus.INTERNAL_SERVER_ERROR,
+            data : [],
+            message : "Error Occured during forgot password!"
         }
     }
 }
