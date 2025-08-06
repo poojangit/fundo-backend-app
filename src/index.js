@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
+console.log("Loaded Email User:", process.env.EMAIL_USER);
 
 import express from 'express';
 import cors from 'cors';

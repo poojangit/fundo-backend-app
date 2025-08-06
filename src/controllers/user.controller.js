@@ -33,3 +33,16 @@ export const userLogin = async (req, res) => {
     console.log('Error occured while login: ' + error);
   }
 };
+
+export const forgotPass = async(req, res) => {
+  try {
+    const data = await UserService.forgotPass(req.body)
+    res.status(data.code).json({
+      code: data.code,
+      data: data.data,
+      message: data.message
+    })
+  } catch(error) {
+    console.error("Error in forgot password Controller: ", error);
+  }
+}
