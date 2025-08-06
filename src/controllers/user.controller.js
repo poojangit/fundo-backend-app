@@ -46,3 +46,16 @@ export const forgotPass = async(req, res) => {
     console.error("Error in forgot password Controller: ", error);
   }
 }
+
+export const resetPass = async(req, res) => {
+  try {
+    const data = await UserService.resetPass(req.body)
+    res.status(data.code).json({
+      code : data.code,
+      data : data.data,
+      message : data.message
+    })
+  } catch (error){
+    console.error("Error in Reset password Controller: " , error)
+  }
+}

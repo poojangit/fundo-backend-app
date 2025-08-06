@@ -96,7 +96,7 @@ export const forgotPass = async ({ email }) => {
     if (!checkUser) {
       return {
         code: HttpStatus.NOT_FOUND,
-        data: [],
+        data: data,
         message: 'No user found'
       };
     }
@@ -119,7 +119,7 @@ export const forgotPass = async ({ email }) => {
         message: 'Failed to send reset email'
       };
     }
-    
+
     return {
       code: HttpStatus.OK,
       data: { token },
@@ -134,3 +134,33 @@ export const forgotPass = async ({ email }) => {
     };
   }
 };
+
+export const resetPass = async ({email, newPassword}) => {
+    try {
+        const user = await User.findOne({email})
+        if(!user) {
+            return {
+                code : HttpStatus.NOT_FOUND,
+                data : [],
+                message : "User not found"
+            }
+        }
+        const hashedPassword = await bcrypt.hash(newPassword, saltRounds)
+        user.password = hashedPassword
+        await user.save()
+
+        return {
+            code : HttpStatus.OK,
+            data : { id: user._id, email: user.email },
+            message : 'Password reset successfully!!'
+        }
+    }
+    catch(error) {
+        console.error("Error resetting password: ", error)
+        return {
+            code : HttpStatus.INTERNAL_SERVER_ERROR,
+            data : [],
+            message : 'Error resetting password'
+        }
+    }
+}
