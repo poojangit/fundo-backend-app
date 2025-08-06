@@ -8,5 +8,6 @@ router.post('', newUserValidator, userController.newUser)
 
 router.post('/login', userController.userLogin )
 router.post('/forgotPassword', userController.forgotPass)
+router.post('/resetPassword', userController.resetPass)
 
 export default router
